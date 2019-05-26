@@ -55,12 +55,12 @@ function addTripRoutes(app) {
     //create
     app.post(`${BASE_PATH}`, async(req, res) => {
         let trip = req.body
-        trip.user = req.session.user
-        if (!trip.user) {
+        if (!req.session.user) {
             res.end('Must be logged in to create trip')
             throw ('Must be logged in')
         }
         else {
+            trip.organizer = req.session.user
             try {
                 const newTrip = await tripService.create(trip)
                 return res.json(newTrip)
