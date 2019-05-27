@@ -7,12 +7,12 @@ const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const app = express()
 var server = require('http').Server(app)
-const io = require('socket.io')(server)
+// const io = require('socket.io')(server)
 
 const AddUserRoutes = require('./routes/user-route')
 const AddTripRoutes = require('./routes/trip-route')
 
-const SocketService = require ('./services/socket-service.js')
+// const SocketService = require ('./services/socket-service.js')
 
 
 app.use(cors({
@@ -38,7 +38,7 @@ app.get('/', (req, res) => {
 AddUserRoutes(app)
 AddTripRoutes(app)
 
-SocketService(io)
+// SocketService(io)
 
 
 

@@ -1,5 +1,6 @@
 const tripService = require('../services/trip-service')
 const BASE_PATH = '/trip'
+const axios = require('axios')
 
 module.exports = addTripRoutes;
 async function checkUserMatch(req, res, next) {
@@ -14,10 +15,24 @@ async function checkUserMatch(req, res, next) {
 }
 
 function addTripRoutes(app) {
-
-    
+    app.get(`${BASE_PATH}/placeinfo/:googleParams`, async(req, res) => {
+        var strParams = '?'
+        for (var key in req.query) {
+            strParams += `${key}=${req.query[key]}&`
+        }
+        try {
+            const googleRes = await axios.get(`https://maps.googleapis.com/maps/api/place/details/json${strParams}`)
+            const placeDetails = googleRes.data
+            return res.json(placeDetails)
+        }
+        catch(err) {
+            res.end('Could not fetch place info')
+            throw(err)
+        }
+    })
     //get all
     app.get(`${BASE_PATH}`, async(req, res) => {
+        
         const query = req.query
         try {
             const trips = await tripService.query(query)

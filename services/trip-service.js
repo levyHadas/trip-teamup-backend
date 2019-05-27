@@ -4,6 +4,7 @@ const ObjectId = require('mongodb').ObjectId;
 
 
 
+
 module.exports = {
     query,
     create,
@@ -25,22 +26,23 @@ async function query(query) {
     catch(err) {
         throw (err, 'Could not get trips.')
     }
-
 }
 
 
-async function create(trip) {
-    if (trip.imgs.length < 4) {
-        var urls = []
-        if (!trip.itinerary.length) {
-            urls.push(await imgService.suggestImg(trip.country))
-        }
-        else urls = await imgService.suggestImgs(trip.itinerary)
-        
-        if (trip.imgs.length) trip.imgs.concat(urls)
-        else trip.imgs = urls
+async function _addImgs(trip) {
+    var urls = []
+    if (!trip.itinerary.length) {
+        urls.push(await imgService.suggestImg(trip.country))
     }
-    
+    else {
+        const itinerary = trip.itinerary.map(place => place.formatted_address)
+        urls = await imgService.suggestImgs(itinerary)
+    }
+    trip.imgs = urls
+}
+
+async function create(trip) {
+    await _addImgs(trip)
     const db = await mongoService.connect()
     try {
         const res = await db.collection('trip').insertOne(trip)
@@ -79,6 +81,8 @@ async function remove(id) {
 }
 
 async function update(trip) {
+    await _addImgs(trip)
+    console.log(trip)
     const strTripId = trip._id
     trip._id = new ObjectId(trip._id)
     const db = await mongoService.connect()
