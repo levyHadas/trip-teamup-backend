@@ -4,7 +4,7 @@ const axios = require('axios')
 
 module.exports = addTripRoutes;
 async function checkUserMatch(req, res, next) {
-    console.log('INSIDE MIDDLEWARE: ', req.session.user);
+    // console.log('INSIDE MIDDLEWARE: ', req.session.user);
     const trip = await tripService.getById(req.params.tripId)  
     if (!req.session.user 
         || req.session.user._id !== trip.organizer._id) {

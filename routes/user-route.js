@@ -47,7 +47,7 @@ function addUserRoutes(app) {
     })
     
     app.get(`${BASE_PATH}/logout`, (req, res) => {
-        console.log('req.session.user: ', req.session.user)
+        // console.log('req.session.user: ', req.session.user)
         req.session.destroy()
         res.clearCookie('connect.sid')
         res.end()
