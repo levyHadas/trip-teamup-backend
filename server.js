@@ -43,7 +43,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join('D:/Hadas/projects/trip-teamup/trip-teamup-frontend', 'build')));
   
   app.get('/test', (req, res) => {
-    res.send('server runing')
+    res.send('server runing - new test')
   })
     
   app.get('/*', function (req, res) {
