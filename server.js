@@ -13,7 +13,6 @@ var server = require('http').Server(app)
 const AddUserRoutes = require('./routes/user-route')
 const AddTripRoutes = require('./routes/trip-route')
 
-
 // const SocketService = require ('./services/socket-service.js')
 
 
@@ -23,7 +22,7 @@ app.use(cors({
   // enable set cookie
 }));
 
-// app.use(express.static('build'))
+app.use(express.static('build'))
 app.use(bodyParser.json())
 app.use(cookieParser());
 app.use(session({
@@ -33,10 +32,10 @@ app.use(session({
   cookie: { secure: false}
 }))
 
-// app.get('/', (req, res) => {
-//   res.send('Hello World!')
-// })
-// if (process.env.NODE_ENV === 'production') {
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+if (process.env.NODE_ENV === 'production') {
   const favicon = require('express-favicon')
   app.use(favicon('D:/Hadas/projects/trip-teamup/trip-teamup-backend/trip-teamup-frontend' + '/build/favicon.ico'))
   const path = require('path');
@@ -50,7 +49,7 @@ app.use(session({
   app.get('/*', function (req, res) {
     res.sendFile('D:/Hadas/projects/trip-teamup/trip-teamup-backend/trip-teamup-frontend/build/index.html');
   });
-// }
+}
 
 AddUserRoutes(app)
 AddTripRoutes(app)
