@@ -36,11 +36,12 @@ app.use(session({
 }))
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-app.get('/', function (req, res) {
+  // res.send('Hello World!')
   res.sendFile('D:/Hadas/projects/trip-teamup/trip-teamup-backend/build/index.html');
-});
+})
+// app.get('/*', function (req, res) {
+//   res.sendFile('D:/Hadas/projects/trip-teamup/trip-teamup-backend/build/index.html');
+// });
 
 AddUserRoutes(app)
 AddTripRoutes(app)
