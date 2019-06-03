@@ -22,7 +22,7 @@ app.use(cors({
   // enable set cookie
 }));
 
-app.use(express.static('public'))
+app.use(express.static('build'))
 app.use(bodyParser.json())
 app.use(cookieParser());
 app.use(session({
@@ -43,7 +43,7 @@ if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join('D:/Hadas/projects/trip-teamup/trip-teamup-backend', 'build')));
     
     app.get('/*', function (req, res) {
-      res.sendFile('build/index.html');
+      res.sendFile('D:/Hadas/projects/trip-teamup/trip-teamup-backend/build/index.html');
     });
 }
 
