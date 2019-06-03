@@ -35,7 +35,7 @@ app.use(session({
   cookie: { secure: false}
 }))
 
-app.get('/', (req, res) => {
+app.get('/*', (req, res) => {
   // res.send('Hello World!')
   res.sendFile('D:/Hadas/projects/trip-teamup/trip-teamup-backend/build/index.html');
 })
