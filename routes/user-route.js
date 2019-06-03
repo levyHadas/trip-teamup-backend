@@ -42,7 +42,6 @@ function addUserRoutes(app) {
     })
     
     app.get(`${BASE_PATH}/loggedUser`, (req, res) => {
-        console.log('found')
         const loggedUser = req.session.user
         return res.json(loggedUser)
     })
