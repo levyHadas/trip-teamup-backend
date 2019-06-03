@@ -1,5 +1,5 @@
 const tripService = require('../services/trip-service')
-const BASE_PATH = '/trip'
+const BASE_PATH = '/api/trip'
 const axios = require('axios')
 
 module.exports = addTripRoutes;

@@ -1,5 +1,5 @@
 const userService = require('../services/user-service')
-const BASE_PATH = '/user'
+const BASE_PATH = '/api/user'
 
 module.exports = addUserRoutes;
 
@@ -42,6 +42,7 @@ function addUserRoutes(app) {
     })
     
     app.get(`${BASE_PATH}/loggedUser`, (req, res) => {
+        console.log('found')
         const loggedUser = req.session.user
         return res.json(loggedUser)
     })
