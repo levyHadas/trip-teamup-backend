@@ -39,8 +39,8 @@ if (process.env.NODE_ENV === 'production') {
   const favicon = require('express-favicon')
   app.use(favicon('D:/Hadas/projects/trip-teamup/trip-teamup-backend/trip-teamup-frontend' + '/build/favicon.ico'))
   const path = require('path');
-  app.use(express.static('D:/Hadas/projects/trip-teamup/trip-teamup-backend/trip-teamup-frontend'));
-  app.use(express.static(path.join('D:/Hadas/projects/trip-teamup/trip-teamup-backend/trip-teamup-frontend', 'build')));
+  app.use(express.static('D:/Hadas/projects/trip-teamup/trip-teamup-backend/trip-teamup-frontend'))
+  app.use(express.static(path.join('D:/Hadas/projects/trip-teamup/trip-teamup-backend', 'build')))
   
   app.get('/test', (req, res) => {
     res.send('server runing')
