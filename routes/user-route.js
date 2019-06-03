@@ -1,5 +1,5 @@
 const userService = require('../services/user-service')
-const BASE_PATH = 'api/user'
+const BASE_PATH = '/api/user'
 
 module.exports = addUserRoutes;
 

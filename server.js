@@ -37,17 +37,17 @@ app.get('/', (req, res) => {
 })
 if (process.env.NODE_ENV === 'production') {
   const favicon = require('express-favicon')
-  app.use(favicon('D:/Hadas/projects/trip-teamup/trip-teamup-backend' + '/build/favicon.ico'))
+  app.use(favicon('D:/Hadas/projects/trip-teamup/trip-teamup-backend/trip-teamup-frontend' + '/build/favicon.ico'))
   const path = require('path');
-  app.use(express.static('D:/Hadas/projects/trip-teamup/trip-teamup-backend'));
-  app.use(express.static(path.join('D:/Hadas/projects/trip-teamup/trip-teamup-backend', 'build')));
+  app.use(express.static('D:/Hadas/projects/trip-teamup/trip-teamup-backend/trip-teamup-frontend'));
+  app.use(express.static(path.join('D:/Hadas/projects/trip-teamup/trip-teamup-backend/trip-teamup-frontend', 'build')));
   
   app.get('/test', (req, res) => {
     res.send('server runing')
   })
     
   app.get('/*', function (req, res) {
-    res.sendFile('D:/Hadas/projects/trip-teamup/trip-teamup-backend/build/index.html');
+    res.sendFile('D:/Hadas/projects/trip-teamup/trip-teamup-backend/trip-teamup-frontend/build/index.html');
   });
 }
 
