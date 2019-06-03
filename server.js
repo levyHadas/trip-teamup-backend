@@ -38,7 +38,7 @@ app.use(session({
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
-app.get('/*', function (req, res) {
+app.get('/', function (req, res) {
   res.sendFile('D:/Hadas/projects/trip-teamup/trip-teamup-backend/build/index.html');
 });
 
