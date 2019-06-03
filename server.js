@@ -6,6 +6,9 @@ const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const app = express()
+const favicon = require('express-favicon')
+app.use(favicon('D:/Hadas/projects/trip-teamup/trip-teamup-backend' + '/build/favicon.ico'))
+const path = require('path');
 var server = require('http').Server(app)
 // const io = require('socket.io')(server)
 
@@ -21,7 +24,8 @@ app.use(cors({
   // enable set cookie
 }));
 
-app.use(express.static('public'));
+app.use(express.static('D:/Hadas/projects/trip-teamup/trip-teamup-backend'));
+app.use(express.static(path.join('D:/Hadas/projects/trip-teamup/trip-teamup-backend', 'build')));
 app.use(bodyParser.json())
 app.use(cookieParser());
 app.use(session({
@@ -34,6 +38,9 @@ app.use(session({
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
+app.get('/*', function (req, res) {
+  res.sendFile('D:/Hadas/projects/trip-teamup/trip-teamup-backend/build/index.html');
+});
 
 AddUserRoutes(app)
 AddTripRoutes(app)

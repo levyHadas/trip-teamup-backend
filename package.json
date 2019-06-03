@@ -16,8 +16,10 @@
     "cors": "^2.8.4",
     "element-ui": "^2.6.1",
     "express": "^4.16.4",
+    "express-favicon": "^2.0.1",
     "express-session": "^1.15.6",
     "mongodb": "^3.1.1",
+    "path": "^0.12.7",
     "socket.io": "^2.2.0",
     "unirest": "^0.6.0"
   }
