@@ -36,7 +36,7 @@ app.use(session({
 // app.get('/', (req, res) => {
 //   res.send('Hello World!')
 // })
-if (process.env.NODE_ENV === 'production') {
+// if (process.env.NODE_ENV === 'production') {
   const favicon = require('express-favicon')
   app.use(favicon('D:/Hadas/projects/trip-teamup/trip-teamup-backend/trip-teamup-frontend' + '/build/favicon.ico'))
   const path = require('path');
@@ -50,7 +50,7 @@ if (process.env.NODE_ENV === 'production') {
   app.get('/*', function (req, res) {
     res.sendFile('D:/Hadas/projects/trip-teamup/trip-teamup-backend/trip-teamup-frontend/build/index.html');
   });
-}
+// }
 
 AddUserRoutes(app)
 AddTripRoutes(app)
