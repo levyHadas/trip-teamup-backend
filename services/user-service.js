@@ -5,11 +5,11 @@ const ObjectId = require('mongodb').ObjectId;
 
 
 module.exports = {
-    // query,
     getById,
     addUser,
     checkLogin,
-    update
+    update,
+    query
 }
 
 
@@ -59,6 +59,18 @@ async function update(user) {
     await db.collection('user').updateOne({_id:user._id},{$set:user})
     user._id = strUserId
     return user    
+}
+
+async function query(query) {
+    if (query.ids) {
+        const ids = JSON.parse(query.ids)
+        const objectIds = ids.map(id => new ObjectId(id))
+        query = {"_id": {"$in":objectIds}}
+    }
+    const db = await mongoService.connect()
+    const res = await db.collection('user').find(query).toArray()
+    return res
+    // const res = await db.collection('user').find({"_id": {"$in":objectIds}}).toArray()
 }
 
 

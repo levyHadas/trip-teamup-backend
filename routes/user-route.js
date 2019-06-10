@@ -7,9 +7,7 @@ module.exports = addUserRoutes;
 function addUserRoutes(app) {
 
     //create user
-    
-
-    app.post(`${BASE_PATH}/signup`, async(req, res) => {
+    app.post(`${BASE_PATH}`, async(req, res) => {
         if (req.body.username && req.body.password) {
             const user = req.body
             try {
@@ -24,6 +22,7 @@ function addUserRoutes(app) {
         else res.status(401).end()
     })
 
+    //login
     app.post(`${BASE_PATH}/login`, async(req, res) => {
         if (!req.body.username || !req.body.password) res.status(401).end()
         else {
@@ -40,21 +39,23 @@ function addUserRoutes(app) {
             }
         }
     })
-    
+
+    //get logged user
     app.get(`${BASE_PATH}/loggedUser`, (req, res) => {
         const loggedUser = req.session.user
         return res.json(loggedUser)
     })
-    
+
+    //logout
     app.get(`${BASE_PATH}/logout`, (req, res) => {
-        // console.log('req.session.user: ', req.session.user)
         req.session.destroy()
         res.clearCookie('connect.sid')
         res.end()
         return Promise.resolve()
     })
     
-    app.put(`${BASE_PATH}/:userId`, async(req, res) => {
+    //update 
+    app.put(`${BASE_PATH}/:userId`, _checkUserAuth, async(req, res) => {
         const user = req.body
         try {
             const updatedUser = await userService.update(user)
@@ -66,6 +67,45 @@ function addUserRoutes(app) {
             throw(err)
         }
     })
+    //get users
+    app.get(BASE_PATH, async(req, res) => {        
+        try {
+            const users = await userService.query(req.query)
+            return res.json(users)
+        }
+        catch(err) {
+            res.end('Could not fatch users')
+            throw(err)
+        }
+    })
+
+}
+
+function _checkUserAuth(req, res, next) {
+    const {userId} = req.params
+    if (userId !== req.session.user._id) { //if it's not the user that
+        res.status(401).end('Unauthorized');
+        return;
+    }
+    next()
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // app.get(`${BASE_PATH}/:userId`, (req, res) => {
     //     const {userId} = req.params
@@ -73,19 +113,5 @@ function addUserRoutes(app) {
     //         .then(user => res.json(user))
     // })
 
-
-    
-
-
-
-}
-
-
-
-    //get users
-    // app.get(BASE_PATH, (req, res) => {
-    //     userService.query()
-    //         .then(users => res.json(users))
-    // })
 
  

@@ -3,16 +3,6 @@ const BASE_PATH = '/api/trip'
 const axios = require('axios')
 
 module.exports = addTripRoutes;
-async function checkUserMatch(req, res, next) {
-    // console.log('INSIDE MIDDLEWARE: ', req.session.user);
-    const trip = await tripService.getById(req.params.tripId)  
-    if (!req.session.user 
-        || req.session.user._id !== trip.organizer._id) {
-            res.status(401).end('Unauthorized');
-            return;
-        }
-    next()
-}
 
 function addTripRoutes(app) {
     app.get(`${BASE_PATH}/placeinfo/:googleParams`, async(req, res) => {
@@ -56,7 +46,7 @@ function addTripRoutes(app) {
         }
     })
     //delete
-    app.delete(`${BASE_PATH}/:tripId`,checkUserMatch, async(req, res) => {
+    app.delete(`${BASE_PATH}/:tripId`,_checkDeleteAuth, async(req, res) => {
         const id = req.params.tripId
         try {
             await tripService.remove(id)
@@ -87,7 +77,7 @@ function addTripRoutes(app) {
         }
     })
     //update
-    app.put(`${BASE_PATH}/:tripId`,checkUserMatch, async(req, res) => {
+    app.put(`${BASE_PATH}/:tripId`,_checkUpdateAuth, async(req, res) => {
         const trip = req.body
         try {
             const updatedTrip = await tripService.update(trip)
@@ -98,22 +88,39 @@ function addTripRoutes(app) {
             throw(err)
         }
     })
-    //update likes and members
-    app.put(`${BASE_PATH}/memberslikes/:tripId`, async(req, res) => {
-        var originalTrip = await tripService.getById(req.body._id)
-        var originalTrip = originalTrip
-        originalTrip.likes = req.body.likes
-        originalTrip.members = [...req.body.members]
-        try {
-            const updatedTrip = await tripService.update(originalTrip)
-            return res.json(updatedTrip)
-        }
-        catch(err) {
-            res.end('Could not update trip')
-            throw(err)
-        }
-    })
 
+}
+
+async function _checkDeleteAuth(req, res, next) {
+    if (!_isUserMatch(req)) {
+            res.status(401).end('Unauthorized');
+            return;
+        }
+    next()
+}
+async function _checkUpdateAuth(req, res, next) {
+    if (!_isUserMatch(req)) return _updateTripMembersAndLikes(req, res)
+    else next()
+}
+async function _isUserMatch(req) {
+    const trip = await tripService.getById(req.params.tripId)  
+    return (!req.session.user 
+        || req.session.user._id !== trip.organizer._id)
+}
+
+async function _updateTripMembersAndLikes(req, res) {
+    var originalTrip = await tripService.getById(req.body._id)
+    var originalTrip = originalTrip
+    originalTrip.likes = req.body.likes
+    originalTrip.members = [...req.body.members]
+    try {
+        const updatedTrip = await tripService.update(originalTrip)
+        return res.json(updatedTrip)
+    }
+    catch(err) {
+        res.end('Could not update trip')
+        throw(err)
+    }
 }
  
 
