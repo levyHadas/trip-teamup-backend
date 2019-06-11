@@ -62,9 +62,9 @@ async function update(user) {
 }
 
 async function query(query) {
-    if (query.ids) {
-        const ids = JSON.parse(query.ids)
-        const objectIds = ids.map(id => new ObjectId(id))
+    if (query && query.usersIds) {
+        const usersIds = JSON.parse(query.usersIds)
+        const objectIds = usersIds.map(id => new ObjectId(id))
         query = {"_id": {"$in":objectIds}}
     }
     const db = await mongoService.connect()

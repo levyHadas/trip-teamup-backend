@@ -14,10 +14,23 @@ module.exports = {
 }
 
 
-async function query(query) {
-    queryToMongo = {}
-    if (query.name) queryToMongo.budget = {'$regex': query.name, '$options' : 'i'}
-    if (query.type) queryToMongo.location = {'$regex': query.type, '$options' : 'i'}
+async function query(query = {}) {
+    var queryToMongo = {}
+    if (query.tripsIds) {
+        const tripsIds = JSON.parse(query.tripsIds)
+        const objectIds = tripsIds.map(id => new ObjectId(id))
+        query = {"_id": {"$in":objectIds}}
+    } else {
+        if (query.country) queryToMongo.country = {'$regex': query.country, '$options' : 'i'}
+        // if (query.place) queryToMongo.country = {'$regex': query.country, '$options' : 'i'}
+        if (query.type) queryToMongo.type = {'$regex': query.type, '$options' : 'i'}
+        if (query.budget) {
+            const budget = JSON.parse(query.budget)
+            console.log(budget)
+            queryToMongo['budget.min'] = {'$gte' :budget.min}
+            queryToMongo['budget.max'] = {'$lte' :budget.max}
+        }
+    }
     const db = await mongoService.connect()
     try {
         const res = await db.collection('trip').find(queryToMongo).toArray()
