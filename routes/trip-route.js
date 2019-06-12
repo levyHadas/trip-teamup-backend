@@ -22,7 +22,6 @@ function addTripRoutes(app) {
     })
     //get all
     app.get(`${BASE_PATH}`, async(req, res) => {
-        console.log(req.query)        
         try {
             const trips = await tripService.query(req.query)
             return res.json(trips)

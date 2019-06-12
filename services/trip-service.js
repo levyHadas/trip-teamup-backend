@@ -26,7 +26,6 @@ async function query(query = {}) {
         if (query.type) queryToMongo.type = {'$regex': query.type, '$options' : 'i'}
         if (query.budget) {
             const budget = JSON.parse(query.budget)
-            console.log(budget)
             queryToMongo['budget.min'] = {'$gte' :budget.min}
             queryToMongo['budget.max'] = {'$lte' :budget.max}
         }
