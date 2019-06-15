@@ -79,6 +79,19 @@ function addUserRoutes(app) {
         }
     })
 
+    //get one BY ID
+    app.get(`${BASE_PATH}/:userId`, async(req, res) => {
+        const id = req.params.userId
+        try {
+            const user = await userService.getById(id)
+            return res.json(user)
+        }
+        catch(err) {
+            res.end('Could not fetch user')
+            throw(err)
+        }
+    })
+
 }
 
 function _checkUserAuth(req, res, next) {

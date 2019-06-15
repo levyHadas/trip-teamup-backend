@@ -1,5 +1,5 @@
 const mongoService = require('./mongo-service')
-const imgService = require('./img-service')
+// const imgService = require('./img-service')
 const ObjectId = require('mongodb').ObjectId;
 
 
@@ -24,10 +24,16 @@ async function query(query = {}) {
         if (query.country) queryToMongo.country = {'$regex': query.country, '$options' : 'i'}
         // if (query.place) queryToMongo.country = {'$regex': query.country, '$options' : 'i'}
         if (query.type) queryToMongo.type = {'$regex': query.type, '$options' : 'i'}
+        if (query.status) queryToMongo.status = {'$regex': query.status, '$options' : 'i'}
         if (query.budget) {
             const budget = JSON.parse(query.budget)
             queryToMongo['budget.min'] = {'$gte' :budget.min}
             queryToMongo['budget.max'] = {'$lte' :budget.max}
+        }
+        if (query.startDate || query.endDate) {
+            var startDate = (query.startDate) ? new Date(query.startDate).getTime() : 0
+            var endDate = (query.endDate) ? new Date(query.endDate).getTime() : Infinity
+            queryToMongo.tripDate = {'$gte' :startDate, '$lte' :endDate}
         }
     }
     const db = await mongoService.connect()
