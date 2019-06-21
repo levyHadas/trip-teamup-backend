@@ -19,7 +19,7 @@ async function query(query = {}) {
     if (query.tripsIds) {
         const tripsIds = JSON.parse(query.tripsIds)
         const objectIds = tripsIds.map(id => new ObjectId(id))
-        query = {"_id": {"$in":objectIds}}
+        queryToMongo = {"_id": {"$in":objectIds}}
     } else {
         if (query.country) queryToMongo.country = {'$regex': query.country, '$options' : 'i'}
         // if (query.place) queryToMongo.country = {'$regex': query.country, '$options' : 'i'}
