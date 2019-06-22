@@ -67,6 +67,22 @@ function addUserRoutes(app) {
             throw(err)
         }
     })
+    //need a different route for this, since we are updating a user that is not logged in - only adding to his incomingRequests
+    app.put(`${BASE_PATH}/incomingRequests/:organizerId`, async(req, res) => {
+        try {
+            const { organizerId } = req.params
+            const newRequest = req.body
+            var organizer = await userService.getById(organizerId)
+            if (!organizer.incomingRequests) organizer.incomingRequests = [] //for users that wew created before adding these fields
+            organizer.incomingRequests.push(newRequest)
+            const updatedUser = await userService.update(organizer)
+            return res.json(updatedUser)
+        }
+        catch(err) {
+            res.end('Could not update user')
+            throw(err)
+        }
+    })
     //get users
     app.get(BASE_PATH, async(req, res) => {        
         try {

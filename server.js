@@ -10,8 +10,9 @@ const app = express()
 var server = require('http').Server(app)
 // const io = require('socket.io')(server)
 
-const AddUserRoutes = require('./routes/user-route')
-const AddTripRoutes = require('./routes/trip-route')
+const addUserRoutes = require('./routes/user-route')
+const addTripRoutes = require('./routes/trip-route')
+const addRequestRoutes = require('./routes/request-route')
 
 // const SocketService = require ('./services/socket-service.js')
 
@@ -51,8 +52,9 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-AddUserRoutes(app)
-AddTripRoutes(app)
+addUserRoutes(app)
+addTripRoutes(app)
+addRequestRoutes(app)
 
 // SocketService(io)
 
