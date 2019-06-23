@@ -44,7 +44,7 @@ function addTripRoutes(app) {
         }
     })
     //delete
-    app.delete(`${BASE_PATH}/:tripId`,_checkDeleteAuth, async(req, res) => {
+    app.delete(`${BASE_PATH}/:tripId`, _authenticateOrganizer, async(req, res) => {
         const id = req.params.tripId
         try {
             await tripService.remove(id)
@@ -75,7 +75,7 @@ function addTripRoutes(app) {
         }
     })
     //update
-    app.put(`${BASE_PATH}/:tripId`,_checkUpdateAuth, async(req, res) => {
+    app.put(`${BASE_PATH}/:tripId`, _authenticateOrganizer, async(req, res) => {
         const trip = req.body
         try {
             const updatedTrip = await tripService.update(trip)
@@ -86,40 +86,48 @@ function addTripRoutes(app) {
             throw(err)
         }
     })
+    app.put(`${BASE_PATH}/likes/:tripId`, async(req, res) => {
+        const updatedLikes = req.body.likes
+        var originalTrip = await tripService.getById(req.params.tripId)
+        originalTrip.likes = updatedLikes
+        try {
+            const updatedTrip = await tripService.update(originalTrip)
+            return res.json(updatedTrip)
+        }
+        catch(err) {
+            res.end('Could not update likes')
+            throw(err)
+        }
+    })
 
 }
 
-async function _checkDeleteAuth(req, res, next) {
+async function _authenticateOrganizer(req, res, next) {
     if (!_isUserMatch(req)) {
             res.status(401).end('Unauthorized');
             return;
         }
     next()
 }
-async function _checkUpdateAuth(req, res, next) {
-    if (!_isUserMatch(req)) return _updateTripMembersAndLikes(req, res)
-    else next()
-}
+
 async function _isUserMatch(req) {
     const trip = await tripService.getById(req.params.tripId)  
     return (!req.session.user 
         || req.session.user._id !== trip.organizer._id)
 }
 
-async function _updateTripMembersAndLikes(req, res) {
-    var originalTrip = await tripService.getById(req.body._id)
-    var originalTrip = originalTrip
-    originalTrip.likes = req.body.likes
-    originalTrip.members = [...req.body.members]
-    try {
-        const updatedTrip = await tripService.update(originalTrip)
-        return res.json(updatedTrip)
-    }
-    catch(err) {
-        res.end('Could not update trip')
-        throw(err)
-    }
-}
+// async function _updateTripLikes(req, res) {
+//     var originalTrip = await tripService.getById(req.body._id)
+//     originalTrip.likes = req.body.likes
+//     try {
+//         const updatedTrip = await tripService.update(originalTrip)
+//         return res.json(updatedTrip)
+//     }
+//     catch(err) {
+//         res.end('Could not update trip')
+//         throw(err)
+//     }
+// }
  
 
 
