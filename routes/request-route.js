@@ -4,7 +4,6 @@ const BASE_PATH = '/api/request'
 
 module.exports = addRequestRoutes;
 
-
 function addRequestRoutes(app) {
 
     //add new incoming request
@@ -22,7 +21,7 @@ function addRequestRoutes(app) {
             res.end('Could not add incoming request')
             throw(err)
         }
-
+        
     })
     //add new outgoing request
     app.post(`${BASE_PATH}/outgoing/:memberId`, async(req, res) => {
@@ -44,26 +43,24 @@ function addRequestRoutes(app) {
 
     //update incoming
     app.put(`${BASE_PATH}/incoming/:organizerId`, async(req, res) => {
-
         try {
             const { organizerId } = req.params
             const updatedRequest = req.body
-            //{this needs to be a function for both: const updatedOrganizer = await request-service.updateRequest
             var organizer = await userService.getById(organizerId) 
-            var requestToUpdateIdx = organizer.incomingRequests.findIndex( request => request.tripId === updatedRequest.tripId)
+            var requestToUpdateIdx = organizer.incomingRequests.findIndex(request => {
+                return request._id === updatedRequest._id})
             if (requestToUpdateIdx !== -1) {
                 organizer.incomingRequests[requestToUpdateIdx] = updatedRequest
                 const updatedOrganizer = await userService.update(organizer)
             //}
                 return res.json(updatedOrganizer)
             }
-            else throw('request not found')
+            else throw('incoming request not found')
         }
         catch(err) {
             res.end('Could not update incoming request')
-            throw(err)
+            throw (err)
         }
-
     })
 
     //update outgoing
@@ -72,23 +69,25 @@ function addRequestRoutes(app) {
             const { memberId } = req.params
             const updatedRequest = req.body
             var member = await userService.getById(memberId)
-            var requestToUpdateIdx = member.outgoingRequests.findIndex( request => request.tripId === updatedRequest.tripId)
+            var requestToUpdateIdx = member.outgoingRequests.findIndex(request => {
+                return request._id === updatedRequest._id
+            })
             if (requestToUpdateIdx !== -1) {
-                member.outgoingRequests[requestToUpdateIdx] = updatedRequest
-                if ( updatedRequest.status === 'approved') {
-                    member.trips.push(updatedRequest.tripId)
-                    var joinedTrip = tripService.getById(updatedRequest.tripId)
-                    joinedTrip.members.push(updatedRequest.memberId)
-                    await tripService.update(joinedTrip)
+                member.outgoingRequests[requestToUpdateIdx] = updatedRequest //update status
+                if ( updatedRequest.status === 'approved') { //if approved -
+                    var joinedTrip = await tripService.getById(updatedRequest.tripId)
+                    joinedTrip.members.push(updatedRequest.memberId) //add to trips's members
+                    await tripService.update(joinedTrip) //save the trip
+                    member.trips.push(updatedRequest.tripId)//add this to member's trip
                 }
-                const updatedMember = await userService.update(member)
+                const updatedMember = await userService.update(member) //save update in member
                 return res.json(updatedMember)
             }
-            throw('request not found')
+            else throw ('outgoing request not found')
         }
         catch(err) {
             res.end('Could not update outgoing request')
-            throw(err)
+            throw (err)
         }
 
     })

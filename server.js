@@ -8,13 +8,13 @@ const session = require('express-session')
 const app = express()
 
 var server = require('http').Server(app)
-// const io = require('socket.io')(server)
+const io = require('socket.io')(server)
 
 const addUserRoutes = require('./routes/user-route')
 const addTripRoutes = require('./routes/trip-route')
 const addRequestRoutes = require('./routes/request-route')
 
-// const SocketService = require ('./services/socket-service.js')
+const socketService = require ('./services/socket-service.js')
 
 
 app.use(cors({
@@ -49,14 +49,14 @@ if (process.env.NODE_ENV === 'production') {
     
   app.get('/trip', function (req, res) {
     res.sendFile('D:/Hadas/projects/trip-teamup/trip-teamup-backend/trip-teamup-frontend/build/index.html');
-  });
+  })
+
 }
 
 addUserRoutes(app)
 addTripRoutes(app)
 addRequestRoutes(app)
-
-// SocketService(io)
+socketService(io)
 
 
 

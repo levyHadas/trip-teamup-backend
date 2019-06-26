@@ -85,7 +85,7 @@ function addTripRoutes(app) {
             res.end('Could not update trip')
             throw(err)
         }
-    })
+    }) //update trip likes
     app.put(`${BASE_PATH}/likes/:tripId`, async(req, res) => {
         const updatedLikes = req.body.likes
         var originalTrip = await tripService.getById(req.params.tripId)
@@ -101,7 +101,7 @@ function addTripRoutes(app) {
     })
 
 }
-
+//TODO: TRY USING PASSPORT for authntication.
 async function _authenticateOrganizer(req, res, next) {
     if (!_isUserMatch(req)) {
             res.status(401).end('Unauthorized');
@@ -116,18 +116,7 @@ async function _isUserMatch(req) {
         || req.session.user._id !== trip.organizer._id)
 }
 
-// async function _updateTripLikes(req, res) {
-//     var originalTrip = await tripService.getById(req.body._id)
-//     originalTrip.likes = req.body.likes
-//     try {
-//         const updatedTrip = await tripService.update(originalTrip)
-//         return res.json(updatedTrip)
-//     }
-//     catch(err) {
-//         res.end('Could not update trip')
-//         throw(err)
-//     }
-// }
+
  
 
 

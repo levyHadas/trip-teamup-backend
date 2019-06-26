@@ -21,7 +21,6 @@ function addUserRoutes(app) {
         }
         else res.status(401).end()
     })
-
     //login
     app.post(`${BASE_PATH}/login`, async(req, res) => {
         if (!req.body.username || !req.body.password) res.status(401).end()
@@ -39,13 +38,11 @@ function addUserRoutes(app) {
             }
         }
     })
-
     //get logged user
     app.get(`${BASE_PATH}/loggedUser`, (req, res) => {
         const loggedUser = req.session.user
         return res.json(loggedUser)
     })
-
     //logout
     app.get(`${BASE_PATH}/logout`, (req, res) => {
         req.session.destroy()
@@ -53,7 +50,6 @@ function addUserRoutes(app) {
         res.end()
         return Promise.resolve()
     })
-    
     //update 
     app.put(`${BASE_PATH}/:userId`, _checkUserAuth, async(req, res) => {
         const user = req.body
@@ -94,7 +90,6 @@ function addUserRoutes(app) {
             throw(err)
         }
     })
-
     //get one BY ID
     app.get(`${BASE_PATH}/:userId`, async(req, res) => {
         const id = req.params.userId
@@ -118,29 +113,6 @@ function _checkUserAuth(req, res, next) {
     }
     next()
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // app.get(`${BASE_PATH}/:userId`, (req, res) => {
-    //     const {userId} = req.params
-    //     userService.getById(userId)
-    //         .then(user => res.json(user))
-    // })
 
 
  

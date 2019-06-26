@@ -1,8 +1,5 @@
 const mongoService = require('./mongo-service')
-
 const ObjectId = require('mongodb').ObjectId;
-
-
 
 module.exports = {
     getById,
@@ -70,7 +67,6 @@ async function query(query) {
     const db = await mongoService.connect()
     const res = await db.collection('user').find(query).toArray()
     return res
-    // const res = await db.collection('user').find({"_id": {"$in":objectIds}}).toArray()
 }
 
 

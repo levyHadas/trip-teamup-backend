@@ -1,9 +1,5 @@
 const mongoService = require('./mongo-service')
-// const imgService = require('./img-service')
 const ObjectId = require('mongodb').ObjectId;
-
-
-
 
 module.exports = {
     query,
@@ -22,7 +18,6 @@ async function query(query = {}) {
         queryToMongo = {"_id": {"$in":objectIds}}
     } else {
         if (query.country) queryToMongo.country = {'$regex': query.country, '$options' : 'i'}
-        // if (query.place) queryToMongo.country = {'$regex': query.country, '$options' : 'i'}
         if (query.type) queryToMongo.type = {'$regex': query.type, '$options' : 'i'}
         if (query.status) queryToMongo.status = {'$regex': query.status, '$options' : 'i'}
         if (query.budget) {
@@ -46,20 +41,6 @@ async function query(query = {}) {
     }
 }
 
-
-// async function _addImgs(trip) {
-//     var urls = []
-//     if (!trip.itinerary.length) {
-//         urls.push(await imgService.suggestImg(trip.country))
-//     }
-//     else {
-//         const itinerary = trip.itinerary.map(place => place.formatted_address)
-//         urls = await imgService.suggestImgs(itinerary)
-//     }
-//     trip.imgs = urls
-// }
-
-
 async function create(trip) {
     const db = await mongoService.connect()
     try {
@@ -71,7 +52,6 @@ async function create(trip) {
         throw (err, 'Could not add trip.')
     }
 }
-
 
 async function getById(id) {
     const _id = new ObjectId(id)
